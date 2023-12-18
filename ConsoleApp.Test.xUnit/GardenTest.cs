@@ -1,7 +1,27 @@
 namespace ConsoleApp.Test.xUnit
 {
-    public class GardenTest
+    public class GardenTest : IDisposable
     {
+
+        //SetUp i TearDown uwa¿ane s¹ za z³¹ praktykê w testach jednostkowych
+        //jeœli potrzebujemy podobnych rozwi¹zañ, powinniœmy skorzystaæ z metod prywatnych ujednolicaj¹cych powtarzaj¹cy siê kod inicjuj¹cy testy
+        
+        private Garden Garden { get; set; }
+
+        //odpowiednik funkcjonalnoœci setup
+        public GardenTest()
+        {
+            Garden = new Garden(0);
+        }
+
+        //odpowiednik funkcjonalnoœci teardown
+        public void Dispose()
+        {
+            Garden = null;
+        }
+
+
+
         [Fact]
         //public void MethodName_Scenario_Result()
         //public void MethodNameReturnValueWhenSthHappend()
@@ -53,7 +73,27 @@ namespace ConsoleApp.Test.xUnit
             Assert.False(result);
         }*/
 
-        [Fact]
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData("\n")]
+        [InlineData("\t")]
+        public void Plant_InvalidName_ArgumentException(string? invalidName)
+        {
+            //Arrange
+            const int MINIMAL_VALID_SIZE = 0;
+            var garden = new Garden(MINIMAL_VALID_SIZE);
+
+            //Act
+            Action action = () => garden.Plant(invalidName);
+
+            //Assert
+            var exception = Assert.ThrowsAny<ArgumentException>(action); 
+            Assert.Equal("name", exception.ParamName);
+        }
+
+        [Fact(Skip = "Replaced by Plant_InvalidName_ArgumentException")]
         public void Plant_NullName_ArgumentNullException()
         {
             //Arrange
@@ -70,7 +110,7 @@ namespace ConsoleApp.Test.xUnit
             Assert.Equal("name", exception.ParamName);
         }
 
-        [Fact]
+        [Fact(Skip = "Replaced by Plant_InvalidName_ArgumentException")]
         public void Plant_EmptyName_ArgumentException()
         {
             //Arrange
@@ -135,6 +175,38 @@ namespace ConsoleApp.Test.xUnit
 
             //Assert
             Assert.NotSame(result1, result2); // NotSame/Same - sprawdza referencjê, a nie elementy na liœcie jak metoda Equal
+        }
+
+        [Theory]
+        //sprzwdzamy warunki brzegowe
+        [InlineData(0)]
+        [InlineData(10)]
+        //Jakaœ dodatkowa wartoœæ z wnêtrza przedzia³u
+        [InlineData(4)]
+        public void Garden_ValidSize_SizeInitialization(int size)
+        {
+            //Arrange & Act
+            var garden = new Garden(size);
+
+            //Assert
+            Assert.Equal(size, garden.Size);
+        }
+
+
+        [Theory]
+        //testujemy warunki brzegowe
+        [InlineData(int.MinValue)]
+        [InlineData(-1)]
+        [InlineData(11)]
+        [InlineData(int.MaxValue)]
+        public void Garden_InvalidSize_ArgumentOutOfRangeException(int size)
+        {
+            //Arrange & Act
+            Action action = () => new Garden(size);
+
+            //Assert
+            var exception = Assert.Throws<ArgumentOutOfRangeException>(action);
+            Assert.Equal("size", exception.ParamName);
         }
     }
 }
