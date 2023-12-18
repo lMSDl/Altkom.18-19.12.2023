@@ -87,5 +87,54 @@ namespace ConsoleApp.Test.xUnit
             Assert.Equal("name", argumentException.ParamName);
             Assert.Contains(ConsoleApp.Properties.Resources.PlantNeedsName, argumentException.Message);
         }
+
+        [Fact]
+        public void Plant_NotNullNotEmptyName_AddedToCollection()
+        {
+            //Arrange
+            const int MINIMAL_VALID_SIZE = 1;
+            const string NOT_NULL_NOT_EMPTY_NAME = "_";
+            var garden = new Garden(MINIMAL_VALID_SIZE);
+
+            //Act
+            _ = garden.Plant(NOT_NULL_NOT_EMPTY_NAME);
+
+            //Assert
+            var plants = garden.GetPlants();
+            Assert.Contains(NOT_NULL_NOT_EMPTY_NAME, plants);
+        }
+
+        [Fact]
+        public void Plant_ExistingName_AddedSameItemCountToName()
+        {
+            //Arrange
+            const int MINIMAL_VALID_SIZE = 2;
+            const string NOT_NULL_NOT_EMPTY_NAME = "_";
+            var garden = new Garden(MINIMAL_VALID_SIZE);
+            _ = garden.Plant(NOT_NULL_NOT_EMPTY_NAME);
+            const string POST_NAME = NOT_NULL_NOT_EMPTY_NAME + "2";
+
+            //Act
+            _ = garden.Plant(NOT_NULL_NOT_EMPTY_NAME);
+
+            //Assert
+            var plants = garden.GetPlants();
+            Assert.Contains(POST_NAME, plants);
+        }
+
+        [Fact]
+        public void GetPlants_CopyOfPlantsCollection()
+        {
+            //Arrange
+            const int INSIGNIFICANT_SIZE = 0;
+            var garden = new Garden(INSIGNIFICANT_SIZE);
+
+            //Act
+            var result1 = garden.GetPlants();
+            var result2 = garden.GetPlants();
+
+            //Assert
+            Assert.NotSame(result1, result2); // NotSame/Same - sprawdza referencjê, a nie elementy na liœcie jak metoda Equal
+        }
     }
 }

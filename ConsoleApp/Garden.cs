@@ -21,11 +21,8 @@ namespace ConsoleApp
 
         public bool Plant(string name)
         {
-            if (name == null)
-                throw new ArgumentNullException(nameof(name));
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException(Resources.PlantNeedsName, nameof(name));
-            
+            ValidatePlantName(name);
+
             if (Items.Count() >= Size)
                 return false;
 
@@ -37,6 +34,14 @@ namespace ConsoleApp
             Items.Add(name);
 
             return true;
+        }
+
+        private static void ValidatePlantName(string name)
+        {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException(Resources.PlantNeedsName, nameof(name));
         }
 
         public ICollection<string> GetPlants()
