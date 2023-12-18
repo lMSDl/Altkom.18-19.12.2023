@@ -1,6 +1,8 @@
-﻿using System;
+﻿using ConsoleApp.Properties;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,8 +24,8 @@ namespace ConsoleApp
             if (name == null)
                 throw new ArgumentNullException(nameof(name));
             if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("Roślina musi posiadać nazwę!", nameof(name));
-
+                throw new ArgumentException(Resources.PlantNeedsName, nameof(name));
+            
             if (Items.Count() >= Size)
                 return false;
 
