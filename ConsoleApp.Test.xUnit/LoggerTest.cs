@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoFixture;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -13,8 +14,9 @@ namespace ConsoleApp.Test.xUnit
         public void Log_AnyMessage_EventInvoked()
         {
             //Arrange
+            var fixture = new Fixture();
             var logger = new Logger();
-            const string ANY_MESSAGE = "_";
+            string ANY_MESSAGE = fixture.Create<string>();
             bool result = false;
             logger.MessageLogged += (sender, args) => { result = true; };
 
@@ -30,7 +32,7 @@ namespace ConsoleApp.Test.xUnit
         {
             //Arrange
             var logger = new Logger();
-            const string ANY_MESSAGE = "_";
+            string ANY_MESSAGE = new Fixture().Create<string>();
             object? eventSender = null;
             Logger.LoggerEventArgs? eventArgs = null;
             logger.MessageLogged += (sender, args) => { eventSender = sender; eventArgs = args as Logger.LoggerEventArgs;};
@@ -54,7 +56,7 @@ namespace ConsoleApp.Test.xUnit
         {
             //Arrange
             var logger = new Logger();
-            const string ANY_MESSAGE = "_";
+            string ANY_MESSAGE = new Fixture().Create<string>();
             DateTime RANGE_FROM = DateTime.Now.AddSeconds(-offsetSec);
             logger.Log(ANY_MESSAGE);
             DateTime RANGE_TO = DateTime.Now.AddSeconds(offsetSec);
