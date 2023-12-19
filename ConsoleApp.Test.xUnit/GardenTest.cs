@@ -1,3 +1,7 @@
+using AutoFixture;
+using FluentAssertions;
+using Moq;
+
 namespace ConsoleApp.Test.xUnit
 {
     public class GardenTest : IDisposable
@@ -207,6 +211,63 @@ namespace ConsoleApp.Test.xUnit
             //Assert
             var exception = Assert.Throws<ArgumentOutOfRangeException>(action);
             Assert.Equal("size", exception.ParamName);
+        }
+
+        [Fact]
+        public void Plant_NotNullNotEmptyName_MessageLogged()
+        {
+            //Arrange
+            const int MINIMAL_VALID_SIZE = 1;
+            string NOT_NULL_NOT_EMPTY_NAME = new Fixture().Create<string>();
+            var loggerMock = new Mock<ILogger>();
+            loggerMock.Setup(x => x.Log(It.Is<string>(xx => xx.Contains(NOT_NULL_NOT_EMPTY_NAME)))).Verifiable();
+
+            var garden = new Garden(MINIMAL_VALID_SIZE, loggerMock.Object);
+
+            //Act
+            garden.Plant(NOT_NULL_NOT_EMPTY_NAME);
+
+            //Assert
+            loggerMock.Verify();
+        }
+
+        [Fact]
+        public void Plant_DuplicatedName_MessageLogged()
+        {
+            //Arrange
+            const int MINIMAL_VALID_SIZE = 2;
+            string NOT_NULL_NOT_EMPTY_NAME = new Fixture().Create<string>();
+            var loggerMock = new Mock<ILogger>();
+            
+
+            var garden = new Garden(MINIMAL_VALID_SIZE, loggerMock.Object);
+            garden.Plant(NOT_NULL_NOT_EMPTY_NAME);
+
+            //Act
+            garden.Plant(NOT_NULL_NOT_EMPTY_NAME);
+
+            //Assert
+            loggerMock.Verify(x => x.Log(It.IsAny<string>()), Times.Exactly(3));
+        }
+
+        [Fact]
+        public void GetLastLogFromLastHour_LastLog()
+        {
+            //Arrange
+            const int INSIGNIFICANT_SIZE = 0;
+            var fixture = new Fixture();
+            var logs = fixture.CreateMany<string>(2);
+
+            var logger = new Mock<ILogger>();
+
+            logger.Setup(x => x.GetLogsAsync(It.IsAny<DateTime>(), It.IsAny<DateTime>())).ReturnsAsync(string.Join("\n", logs));
+            var garden = new Garden(INSIGNIFICANT_SIZE, logger.Object);
+
+            //Act
+            var result = garden.GetLastLogFromLastHour();
+
+            //Assert
+            result.Should().Be(logs.Last());
         }
     }
 }

@@ -12,6 +12,12 @@ namespace ConsoleApp
     {
         public int Size { get; }
         private ICollection<string> Items { get; }
+        private ILogger Logger { get; }
+
+        public Garden(int size, ILogger logger) : this(size)
+        {
+            Logger = logger;
+        }
 
         public Garden(int size)
         {
@@ -26,14 +32,21 @@ namespace ConsoleApp
             ValidatePlantName(name);
 
             if (Items.Count() >= Size)
+            {
+                Logger?.Log($"Brak miejsca w ogrodzie na {name}");
                 return false;
+            }
 
             if (Items.Contains(name))
             {
-                name = name + (Items.Count(x => x.StartsWith(name)) + 1);
+                var newName = name + (Items.Count(x => x.StartsWith(name)) + 1);
+
+                Logger?.Log($"Zmiana nazwy z {name} na {newName}");
+                name = newName;
             }
 
             Items.Add(name);
+            Logger?.Log($"Roślina {name} została dodana do ogrodu");
 
             return true;
         }
@@ -67,6 +80,13 @@ namespace ConsoleApp
         public int Count()
         {
             return Items.Count();
+        }
+
+        public string GetLastLogFromLastHour()
+        {
+            var datetime = DateTime.Now;
+            var log = Logger.GetLogsAsync(datetime.AddHours(-1), datetime).Result;
+            return log.Split("\n").Last();
         }
     }
 }

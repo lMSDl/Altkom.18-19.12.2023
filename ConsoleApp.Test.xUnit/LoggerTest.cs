@@ -113,13 +113,13 @@ namespace ConsoleApp.Test.xUnit
             /*Assert.True(isCompleted);
             Assert.False(isCancelled);
             Assert.Contains(ANY_MESSAGE, result);
-            Assert.True(DateTime.TryParseExact(result.Split(": ")[0], "dd.MM.yyyy hh:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out _));
+            Assert.True(DateTime.TryParseExact(result.Split(": ")[0], "dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out _));
 */
             using (new AssertionScope())
             {
                 task.IsCompletedSuccessfully.Should().BeTrue();
                 task.Result.Should().Contain(ANY_MESSAGE);
-                DateTime.TryParseExact(task.Result.Split(": ")[0], "dd.MM.yyyy hh:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out _).Should().BeTrue();
+                DateTime.TryParseExact(task.Result.Split(": ")[0], "dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out _).Should().BeTrue();
             }
         }
     }
