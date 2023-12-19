@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "WebApi\WebApi.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi.Test.Unit", "WebApi.Test.Unit\WebApi.Test.Unit.csproj", "{EB64F583-18F9-4D07-8435-16B9B8ED3E2D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankTransfer", "BankTransfer\BankTransfer.csproj", "{1BFFCA1F-9ED1-48F5-8A9B-21B7504DBE4E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{EB64F583-18F9-4D07-8435-16B9B8ED3E2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB64F583-18F9-4D07-8435-16B9B8ED3E2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EB64F583-18F9-4D07-8435-16B9B8ED3E2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BFFCA1F-9ED1-48F5-8A9B-21B7504DBE4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BFFCA1F-9ED1-48F5-8A9B-21B7504DBE4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BFFCA1F-9ED1-48F5-8A9B-21B7504DBE4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BFFCA1F-9ED1-48F5-8A9B-21B7504DBE4E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
