@@ -1,4 +1,6 @@
-﻿using System;
+﻿using FluentAssertions;
+using FluentAssertions.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -91,6 +93,20 @@ namespace ConsoleApp.Test.NUnit
             Assert.IsTrue(zip.Where(x => !x.First.Contains("Fizz"))
                              .Where(x => !x.First.Contains("Buzz"))
                              .All(x => x.First == x.Second));
+        }
+
+
+        [Test]
+        public void Compute_5000000_ExecutionTimeBelow1s()
+        {
+            //Arrange
+            const int COUNT = 5000000;
+
+            //Act
+            Action action = () => FizzBuzz.Compute(COUNT);
+
+            //Assert
+            action.ExecutionTime().Should().BeLessThan(1.Seconds());
         }
 
     }
