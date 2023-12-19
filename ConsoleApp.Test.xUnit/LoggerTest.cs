@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -44,6 +45,41 @@ namespace ConsoleApp.Test.xUnit
             Assert.NotNull(eventArgs);
             Assert.Equal(ANY_MESSAGE, eventArgs.Message);
             Assert.InRange(eventArgs.DateTime, timeStart, timeStop);
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(60)]
+        public async void GetLogAsync_DateRange_LoggedMessage(int offsetSec)
+        {
+            //Arrange
+            var logger = new Logger();
+            const string ANY_MESSAGE = "_";
+            DateTime RANGE_FROM = DateTime.Now.AddSeconds(-offsetSec);
+            logger.Log(ANY_MESSAGE);
+            DateTime RANGE_TO = DateTime.Now.AddSeconds(offsetSec);
+            bool isCompleted = false;
+            bool isCancelled = true;
+            string? result = null;
+
+            //Act
+            //var result = await logger.GetLogsAsync(RANGE_FROM, RANGE_TO);
+
+            await logger.GetLogsAsync(RANGE_FROM, RANGE_TO)
+                .ContinueWith(x => 
+            { 
+                isCompleted = x.IsCompleted;
+                isCancelled = x.IsCanceled;
+                result = x.Result;
+            });
+
+
+            //Assert
+            Assert.True(isCompleted);
+            Assert.False(isCancelled);
+            Assert.Contains(ANY_MESSAGE, result);
+            Assert.True(DateTime.TryParseExact(result.Split(": ")[0], "dd.MM.yyyy hh:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out _));
+
         }
     }
 }
